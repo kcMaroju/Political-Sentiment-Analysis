@@ -1,0 +1,10 @@
+1. Open the political sentiment analysis folder, In psa folder you can see "run.py" python file
+2. open anaconda prompt.
+3. copy the path of run.py file and change directory to that path in anaconda prompt.
+4. run the following command "python run.py" after setting that path.
+5. the execution is started running on flask server port(port number will be displayed on prompt)
+6. open that port number in browser.
+7. home page will be displayed.
+8. navigate to search page and select political party and political leader name.
+9. then click on search button.
+10. an image & wikipedia info of selected politician will be displayed along with pie chart which represents his/her support.
