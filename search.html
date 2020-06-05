@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Political Sentiment Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- styles -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600,700" rel="stylesheet">
+  <link href="static/css/bootstrap.css" rel="stylesheet">
+  <link href="static/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="static/css/docs.css" rel="stylesheet">
+  <link href="static/css/prettyPhoto.css" rel="stylesheet">
+  <link href="static/js/google-code-prettify/prettify.css" rel="stylesheet">
+  <link href="static/css/flexslider.css" rel="stylesheet">
+  <link href="static/css/sequence.css" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
+  <link href="static/color/default.css" rel="stylesheet">
+  
+  
+  
+  
+  
+<!------ Include the above in your HEAD tag ---------->
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.0/css/all.css" integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+
+  <!-- fav and touch icons -->
+  <link rel="shortcut icon" href="static/ico/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="static/ico/apple-touch-icon-57-precomposed.png">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+  <!-- Popper JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+		<script language="javascript" type="text/javascript">
+			$(function(){
+    
+				var $cat = $("#category1"),
+					$subcat = $(".subcat");
+				
+				var optgroups = {};
+				
+				$subcat.each(function(i,v){
+					var $e = $(v);
+					var _id = $e.attr("id");
+						optgroups[_id] = {};
+						$e.find("optgroup").each(function(){
+					var _r = $(this).data("rel");
+					$(this).find("option").addClass("is-dyn");
+					optgroups[_id][_r] = $(this).html();
+						});
+				});
+				$subcat.find("optgroup").remove();
+				
+				var _lastRel;
+				$cat.on("change",function(){
+					var _rel = $(this).val();
+					if(_lastRel === _rel) return true;
+					_lastRel = _rel;
+					$subcat.find("option").attr("style","");
+					$subcat.val("");
+					$subcat.find(".is-dyn").remove();
+					if(!_rel) return $subcat.prop("disabled",true);
+					$subcat.each(function(){
+						var $el = $(this);
+					  var _id = $el.attr("id");
+					  $el.append(optgroups[_id][_rel]);
+					});
+					$subcat.prop("disabled",false);
+				});
+				
+			});
+		</script>
+   <style>
+		.form-control-borderless {
+			border: none;
+		}
+
+		.form-control-borderless:hover, .form-control-borderless:active, .form-control-borderless:focus {
+			border: none;
+			outline: none;
+			box-shadow: none;
+		}
+	
+		div.gallery {
+		  margin: 60px;
+		  border: 0px solid #ccc;
+		  float: left;
+		  width: 400px;
+		}
+
+		div.gallery:hover {
+		  border: 1px solid #777;
+		}
+
+		div.gallery img {
+		  width: 100%;
+		  height: auto;
+		}
+
+		div.desc {
+		  padding: 50px;
+		  text-align: center;
+		}
+   </style>
+</head>
+
+<body>
+  <header>
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <!-- logo -->
+          <a class="brand logo" href="index.html">Political Sentiment Analysis</a>
+          <!-- end logo -->
+          <!-- top menu -->
+          <div class="navigation">
+            <nav>
+              <ul class="nav topnav">
+                <li class="dropdown ">
+                  <a href="{{url_for('index')}}">Home</a>
+                </li>
+                <li class="dropdown">
+                  <a href="{{url_for('search')}}">Search</a>
+                </li>
+              </ul>
+            </nav>
+          </div>
+          <!-- end menu -->
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div class="container">
+	<br/>
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-10 col-lg-8">
+			<form class="card card-sm" id="searchform" action="#">
+				<div class="card-body row no-gutters align-items-center">
+					<!-- Example single danger button -->
+					<h6>Politician Name : </h6>&nbsp&nbsp
+					
+					<select name="category1" id="category1">
+						<option value="">Select Political Party Names</option>
+						<option value="tdp">TDP</option>
+						
+						<option value="janasena">Janasena</option>
+						<option value="ysrcp">Ysrcp</option>
+					</select>
+						
+					<select disabled="disabled" class="subcat" id="category2" name="politician_names">
+						<option value>Select Politician Names</option>
+						<!-- Home Ware -->
+						<optgroup data-rel="tdp">
+						  <option value="Chandra Babu Naidu">Chandra Babu Naidu</option>
+                            <option value="Kala Venkat Rao">Etcherla - Kala Venkata Rao</option>
+                            <option value="Gunda Lakshmi Devamma">Srikakulam - Gunda Lakshmi Devamma</option>
+                            <option value="Kondru Murali">Rajam - Kondru Murali</option>
+                            <option value="Ramana Murthi">Narasannapeta - Ramana Murthi</option>
+                            <option value="Bendalam Ashok">Ichchapuram - Bendalam Ashok</option>      
+                            <option value="kalamata Venkataramana">Patapatnam - kalamata Venkataramana</option>
+                            <option value="Gouthu Sirisha">Palasa - Gouthu Sirisha</option>option>    
+            				<option value="kinjarapu Atchannaidu">tekkali - kinjarapu Atchannaidu</option>
+                            <option value="Kuna Ravikumar">Amudalavalasa - Kuna Ravikumar</option>
+                        <option value="Bandaru Satyanarayana Murthy">Pendurthi - Bandaru Satyanarayana Murthy</option>
+                        <option value="chintakayala Ayyannapatrudu">Narsipatnam - chintakayala Ayyannapatrudu</option>
+                         <option value="Panchakarla Ramesh Babu">Yalamanchili - Panchakarla Ramesh Babu</option>
+                         <option value="Velagapudi Ramakrishna">Vizag East - Velagapudi Ramakrishna</option>
+                                     <option value="P.G.V.R Gana Babu">Vizag West -P.G.V.R Gana Babu</option>
+                                      <option value="Vasupalli Ganesh">Vizag South - Vasupalli Ganesh</option>
+                                 <option value="Palla Srinivasa Rao">Gajuwaka - Palla Srinivasa Rao</option>
+
+                                             				<option value="Kidari Sravan Kumar">Araku - Kidari Sravan Kumar</option>
+
+                                             				<option value="Bangarayya">Payakaraopeta - Bangarayya</option>
+
+                                             				<option value="Venkata Sujaya Krishna Rangarao">Bobbili - venkata Sujaya Krishna Rangarao</option>
+
+                                             				<option value="Kolla Lalitha Kumari">S. Kota - Kolla Lalitha Kumari</option>
+
+                                             				<option value="Rajendra Pratap Bhanj Deo">Saluru - Rajendra Pratap Bhanj Deo</option>
+
+                                             				<option value="Veeravaratodramala Janardhan Thatraj">Kurupam - Veeravaratodramala Janardhan Thatraj</option>
+
+
+                                             				<option value="Bobbili Chiranjeevulu">Parvathipuram - Bobbili Chiranjeevulu</option>
+
+                                             				<option value="KE Naidu">Gajapathinagaram - KE Naidu</option>
+
+
+                                             				<option value="Yanamala Krishnudu">Tuni - Yanamala Krishnudu</option>
+            
+                            
+                            <option value="Varupula Raja">Prathipadu - Varupula Raja</option>
+
+
+                                             				<option value="SVSN Varma">Pithapuram - SVSN Varma</option>
+
+
+                                             				<option value="Pilli Ananthalakshmi">Kakinada Rural - Pilli Ananthalakshmi</option>
+
+
+                                             				<option value="Vanamadi Konda Babu">Kakinada Town - Vanamadi Konda Babu</option>
+
+                                 <option value=" Nimmakayala Chinarajappa">Peddapuram - Nimmakayala Chinarajappa</option>
+
+                                 <option value="Ramakrishna Reddy">Anaparthi - Ramakrishna Reddy</option>
+
+                                 <option value="Thota Trimurthulu">Ramachandrapuram - Thota Trimurthulu</option>
+
+                                 <option value="Datla Subbaraju">Mummadivaram - Datla Subbaraju</option>
+
+                                 <option value="Gollapalli Suryarao">Rajolu - Gollapalli Suryarao</option>
+
+                                 <option value="Bandaru Satyananda Rao">Kothapeta - Bandaru Satyananda Rao</option>
+
+                                 <option value="vegulla Jogeswara Rao">Madapeta - vegulla Jogeswara Rao</option>
+
+                                 <option value="Pendurthi Venkatesh">Rajanagaram - Pendurthi Venkatesh</option>
+
+                                 <option value="Adireddi Bhavani">Rajahmundry Urban - Adireddi Bhavani</option>
+
+                                 <option value="Gorantla Butchaiah Chowdary">Rajahmundry Rural - Gorantla Butchaiah Chowdary</option>
+
+                                 <option value="Jyothula Nehru">Jaggampeta - Jyothula Nehru</option>
+
+                                 <option value="Velagapudi Anitha">Kovvuru - Velagapudi Anitha</option>
+
+                                 <option value="Pitani Satyanarayana">Achanta - Pitani Satyanarayana</option>
+
+                                 <option value=" Ramanaidu">Palakollu - Ramanaidu</option>
+
+                                <option value="Bandar Madhava Naidu">Narsapuram - Bandar Madhava Naidu</option>
+
+                                                            <option value="Pulaparthi Ramanjaneyulu">Bhimavaram - Pulaparthi Ramanjaneyulu</option>
+
+
+                                                            <option value="Vetukuri Venkata Siva Ramaraju">Undi - Vetukuri Venkata Siva Ramaraju</option>
+
+
+                                                            <option value=" Arumilli Radhakrishna">Tanuku - Arumilli Radhakrishna</option>
+
+
+                                                                                                                    
+                                                            
+
+                                                            <option value=" Eeli Nani">Tadepalligudem - Eeli Nani</option>
+
+
+                                                            <option value="Ganni Veeranjaneyulu">Unguturu - Ganni Veeranjaneyulu</option>
+
+
+                            
+                                                            <option value="Chintamaneni Prabhakar">Denduluru - Chintamaneni Prabhakar</option>
+
+
+                                                            <option value="Badeti Bujji">Eluru - Badeti Bujji</option>
+
+
+                                                            <option value="Devineni Uma">Mylavaram - Devineni Uma</option>
+
+
+                                                            <option value="Kollu Ravindra">Bandaru - Kollu Ravindra</option>
+
+
+                                                            <option value="Vallabhaneni Vamsi">Gannavaram - Vallabhaneni Vamsi</option>
+
+
+                            
+                                                            <option value=" Jawahar">Tiruvuru - Jawahar</option>
+
+
+                                                            <option value="Jayamangala Venkataramana">Kaikaluru - Jayamangala Venkataramana</option>
+
+
+
+                                                            <option value=" Budha Prasad">Avanigadda - Budha Prasad</option>
+
+
+                                                            <option value="Nakka Anandababu">Vemuru - Nakka Anandababu</option>
+
+
+                                                            <option value=" Anagani Satyaprasad">Repalle - Anagani Satyaprasad</option>
+
+
+                                                            <option value=" Alapati Raja">Tenali - Alapati Raja</option>
+
+
+                                                            <option value=" Nara Lokesh">Mangalagiri - Nara Lokesh</option>
+
+
+                                                            <option value=" Prathipati Pullarao">Chilakalurpeta - Prathipati Pullarao</option>
+
+
+                                                        
+                                                                           <option value="Kodela Sivaprasad">Sattenapalle - Kodela Sivaprasad</option>
+
+
+                                                           <option value="GV Anjaneyulu">Vinukonda - GV Anjaneyulu</option>
+
+
+                                                            <option value=" Yarapathineni Srinivasa Rao">Gurajala - Yarapathineni Srinivasa Rao</option>
+
+
+                                                            <option value=" Mettu Anjireddy">Macharla - Mettu Anjireddy</option>
+
+
+                                                            <option value=" Kommalapati Sridhar">Pedakurapadu - Kommalapati Sridhar</option>
+
+                                <option value=" Dhulipalla Narendra">Ponnuru - Dhulipalla Narendra</option>
+            
+
+                                                        <option value="Adala Prabhakar Reddy">Nellore Rural - Adala Prabhakar Reddy</option>
+
+
+                                                        <option value="Somireddy Chandramohan Reddy">Sarvepalli - Somireddy Chandramohan Reddy</option>
+
+
+                                                        <option value="Bollineni Krishnaiah">Atmakuru - Bollineni Krishnaiah</option>
+
+
+                                                        <option value=" Polamreddy Srinivasula Reddy">Kovuru - Polamreddy Srinivasula Reddy</option>
+
+
+
+                                                        <option value="Pasam Suneel">Gudur - Pasam Suneel</option>
+
+                                                        <option value=" Kurugondla Ramakrishna">Venkatagiri - Kurugondla Ramakrishna</option>
+
+                                                        <option value=" Mukka Ugra Narasimha Reddy">Darsi - Mukka Ugra Narasimha Reddy</option>
+
+                                                        <option value="Yeluri Sambasiva Rao">Parchur - Yeluri Sambasiva Rao</option>
+
+                                                        <option value="Gottipati Ravikumar">Addanki - Gottipati Ravikumar</option>
+
+                                                        <option value="Karanam Balaram">Chirala - Karanam Balaram</option>
+
+                                                        <option value=" Damacharla Janardhan">Ongole - Damacharla Janardhan</option>
+
+                                                        <option value=" Pothula Ramarao">Kandukuru - Pothula Ramarao</option>
+
+                                                        <option value="Dola bala Veeranjaneya Swami">Kondepi - Dola bala Veeranjaneya Swami</option>
+
+                                                        <option value="Kondula Narayana Reddy">Markapuram - Kondula Narayana Reddy</option>
+
+                                                        <option value=" Mutumula Ashok Reddy">Giddaluru - Mutumula Ashok Reddy</option>
+
+                                                        <option value="satyala Chengalrayudu">Rajampet - satyala Chengalrayudu</option>
+
+                                                        <option value="pantagani Narsimha Prasad">Railway Koduru - pantagani Narsimha Prasad</option>
+
+                                                        <option value=" Reddeppagari palli Rameshkumar Reddy">Rayachoti - Reddeppagari palli Rameshkumar Reddy</option>
+
+                                                        <option value=" Venkata Satish Kumar Reddy Singareddy">Pulivendula - Venkata Satish Kumar Reddy Singareddy</option>
+
+                                                        <option value=" Putta Narsimha Reddy">Kamalapuram - Putta Narsimha Reddy</option>
+                            <option value=" Rama Subbareddy ponapureddy">Jammalamadugu - Rama Subbareddy ponapureddy</option>
+
+                                                        <option value=" Putta Sudhakar">Mydukur - Putta Sudhakar</option>
+
+                                                        <option value="sheik  Ameer Babu">Kadapa -sheik  Ameer Babu</option>
+
+                                                        <option value=" Bhuma Akhila Priya">Allagadda - Bhuma Akhila Priya</option>
+
+                                                        <option value=" Budda Rajasekhar Reddy">Srisailam - Budda Rajasekhar Reddy</option>
+                            
+
+                            
+
+                                                        <option value="BC Janardhan Reddy">Banaganapalle - BC Janardhan Reddy</option>
+                                                        <option value="Kambalapadu ediga Prathap">Done - Kambalapadu ediga Prathap</option>
+                                                        <option value=" KE Shyam Babu">Pathikonda - KE Shyam Babu</option>
+                                                        <option value=" B.Jaya Nageswara Reddy">Emmiganur - B.Jaya Nageswara Reddy</option>
+                                                        <option value=" Tikka Reddy">Mantralayam - Tikka Reddy</option>
+                                                        <option value="Bhuma Brahmananda Reddy">Nandyal - Bhuma Brahmananda Reddy</option>
+                                                        <option value=" Kalva Srinivasulu">Raidurgam - Kalva Srinivasulu</option>
+                                                        <option value=" Payyavula Keshav">Uravakonda - Payyavula Keshav</option>
+                            
+                            <option value=" JC Asmith Reddy">Tadipatri - JC Asmith Reddy</option>                                                        
+							<option value="vykuntam Prabhakar Chowdary">Anantapur - vykuntam Prabhakar Chowdary</option>
+                                                        <option value="Paritala Sreeram">Raptadu - Paritala Sreeram</option>
+                                                        <option value=" Veeranna">Madakasira - Veeranna</option>
+                                                        <option value=" Balakrishna Nandamuri">Hindupur - Balakrishna Nandamuri</option>
+                                                        <option value="BK Parthasaradhi">Penukonda - BK Parthasaradhi</option>
+                                                        <option value="Palle Raghunadha Reddy">Puttaparthi - Palle Raghunadha Reddy</option>
+                                                        <option value=" Gonuguntla Suryanarayana">Dharmavaram - Gonuguntla Suryanarayana</option>
+                                                        <option value=" Nara Chandrababu Naidu">Kuppam - Nara Chandrababu Naidu</option>
+                                                        <option value=" Nallari Kishore Kumar Reddy">Pileru - Nallari Kishore Kumar Reddy</option>
+                                                        <option value=" Anisha Reddy">Punganuru - Anisha Reddy</option>
+                                                        <option value="Pulivarthi Nani">Chandragiri - Pulivarthi Nani</option>
+                                                                               <option value="Munnuru Sugunamma">Tirupati - Munnuru Sugunamma</option>     
+                                                                                    <option value=" Satya Prabha">Chitoor - Satya Prabha</option>
+                                                                                    <option value=" Amarnath Reddy">Palamaneru - Amarnath Reddy</option>
+                            <!--Home ware-->
+                                                                                    
+
+                            
+
+						</optgroup>
+						<!-- Education -->
+						
+						
+						<optgroup data-rel="janasena">
+						  <option value="Pawan Kalyan">Pawan Kalyan</option>
+						  
+
+
+                                            <option value="Sundarapu Vijay Kumar "> Yalamanchili: Sundarapu Vijay Kumar </option>
+                           
+                                                <option value="Nakka Rajababu"> Payakaraopet: Nakka Rajababu</option>
+                                            <option value="Pasupuleti Balaraju">Paderu: Pasupuleti Balaraju </option>
+                                            <option value="Mucha Srinivasa Rao"> Rajam: Mucha Srinivasa Rao</option>
+                                            <option value="Koraada Sarveswara Rao"> Srikakulam: Koraada Sarveswara Rao</option>
+                                            <option value="Kotha Purnachandra Rao ">Palaasa: Kotha Purnachandra Rao</option>
+                                            <option value="Baadana Venkata Janardhan(Jana)">Echerla: Baadana Venkata Janardhan(Jana)</option>
+                                            <option value="Lokam Naga Madhavi"> Nellimarla: Lokam Naga Madhavi</option>
+                                            <option value="Raja Ashok Babu"> Tuni: Raja Ashok Babu</option>
+                                            <option value="Kandula Durgesh"> Rajahmundry city: Kandula Durgesh
+
+  
+                                            <option value="Raapaka Vara Prasad">Rajole: Raapaka Vara Prasad</option>
+                                            <option value="Pamula Rajeswari"> P. Gannavaram: Pamula Rajeswari</option>
+                                            <option value="Muttha Sasidhar"> Kakinada City: Muttha Sasidhar</option>
+                                            <option value="Relangi Nageswara Rao">Anaparthi: Relangi Nageswara Rao</option>
+                                            <option value="Pitani Balakrishna">Mummidivaram: Pitani Balakrishna</option>
+                                            <option value="Vegulla Leelakrishna"> Mandapeta: Vegulla Leelakrishna</option>
+                                            <option value="Bolisetty Srinivas">Tadepalligudem: Bolisetty Srinivas</option>
+                                            <option value="Navudu Venkataramana Babu">Unguturu: Navudu Venkataramana Babu</option>
+                                            <option value="Reddy Appalanaidu"> Eluru: Reddy Appalanaidu</option>
+                                            <option value="Nadendla Manohar "> Tenali: Nadendla Manohar </option>
+                                            <option value="Thota Chandrasekhar"> Guntur West: Thota Chandrasekhar</option>
+                                            <option value="Ravela Kishore Babu"> Prathipadu: Ravela Kishore Babu</option>
+                                            <option value="A Bharat Bhushan"> Vemuru: A Bharat Bhushan</option>
+                                            <option value="Sayyed Jilani">Narasaraopet: Sayyed Jilani</option>
+                                            <option value="Pasupuleti Sudhakar">Kaavali: Pasupuleti Sudhakar</option>
+                                            <option value="Chennareddy Manukranth Reddy">Nellore Rural: Chennareddy Manukranth Reddy</option>
+                                            <option value="malli karjuna rao"> Adoni:malli karjuna rao</option>
+                                            <option value="Takkala Madhusudhan Reddy"> Dharmavaram. Takkala Madhusudhan Reddy</option>
+                                            <option value="Patthipati Kusuma Kumari">Rajampet: Patthipati Kusuma Kumari</option>
+                                            <option value="Bonasi Venkata Subbaih">Railway Koduru: Bonasi Venkata Subbaih</option>
+                                            <option value="Bode Ramachandra Yadav"> Punganuru: Bode Ramachandra Yadav</option>
+                                            <option value="Bandi Ramakrishna"> Machilipatnam: Bandi Ramakrishna</option>
+
+						</optgroup>
+						<optgroup data-rel="ysrcp">
+						  <option value="Y. S. Jaganmohan Reddy">jagan</option>
+						  
+
+
+                                      <option value="MALIPEDHI SUDHEER REDDY ">jamalamadugu:MALIPEDHI SUDHEER REDDY</option>
+
+                                                                <option value="RACHAMALLU SIVA PRASAD REDDY ">poddutur:RACHAMALLU SIVA PRASAD REDDY</option>
+                                                                <option value="RAGHURAMIREDDY SETTIPALLI ">mydukur:RAGHURAMIREDDY SETTIPALLI</option>
+                                                                <option value="Pochimareddy Ravindranath Reddy ">kamalapuram:Pochimareddy Ravindranath Reddy</option>
+                                                                <option value="Gunthoti Venkata Subbaiah ">Badvel:Gunthoti Venkata Subbaiah</option>
+                                                                <option value="AMZATH BASHA SHAIK BEPARI  ">kadapa:AMZATH BASHA SHAIK BEPARI </option>
+                                                                <option value="Yeduguri Sandinti Jaganmohan Reddy ">pilivendula:Yeduguri Sandinti Jaganmohan Reddy</option>
+                                                                <option value="MEDA VENKATA MALLIKARJUNA REDDY ">Rajampet:MEDA VENKATA MALLIKARJUNA REDDY</option>
+                                                                <option value="KORAMUTLA SRINIVASULU ">kodur:KORAMUTLA SRINIVASULU</option>
+                                                                <option value="Gadikota Srikanth Reddy ">Rayachota:Gadikota Srikanth Reddy</option>
+                                                                <option value="k CHANDRAMOULI ">KUPPAM:chandramouli</option>
+                                                                <option value="Roja Selvamani">nagari:Roja Selvamani</option>
+                                                                <option value=" Chevireddy Bhaskar Reddy">chandragiri:Chevireddy Bhaskar Reddy</option>
+                                                                <option value=" Arani Srinivasulu">chitoor:Arani Srinivasulu</option>
+                                                                <option value="KALATTUR NARAYANA SWAMY ">nellore:KALATTUR NARAYANA SWAMY</option>
+                                                                <option value="Chintala Ramachandra Reddy ">pileru:Chintala Ramachandra Reddy</option>
+                                                                <option value=" Shaik Nawaz Basha">mudenepali: Shaik Nawaz Basha</option>
+                                                                <option value=" Peddireddy Dwarakanatha Reddy ">Thambalepalli:Peddireddy Dwarakanatha Reddy</option>
+                                                                <option value="BHUMANA KARUNAKAR REDDY ">Tirupathi:BHUMANA KARUNAKAR REDDY</option>
+                                                                <option value="BIYYAPU MADHUSUDHAN REDDY ">srikalahasthi:BIYYAPU MADHUSUDHAN REDDY</option>
+                                                                <option value="K.ADIMULAM SATYAVEDU ">satyaveedu:K.ADIMULAM</option>
+                                                                <option value="Kethireddy Pedda Reddy  ">tadpatri:Kethireddy Pedda Reddy </option>
+                                                                <option value=" Anantha Venkatarami Reddy ">Ananthapur:Anantha Venkatarami Reddy </option>
+                                                                <option value="KAPU RAMACHANDRA REDDY ">Rayadurg:KAPU RAMACHANDRA REDDY</option>
+                                                                <option value="Jonnalagadda Padmavathy ">singanamala:Jonnalagadda Padmavathy</option>
+                                                                <option value=" Y. VISWESWARA REDDY ">Uravakonda:Y. VISWESWARA REDDY </option>
+                                                                <option value="THOPUDURTHY PRAKASH REDDY ">Raptadu:THOPUDURTHY PRAKASH REDDY</option>
+                                                                <option value="MALAGUNDLA SANKARANARAYANA ">penukonda:MALAGUNDLA SANKARANARAYANA</option>
+                                                                <option value="KETHIREDDY VENKATA RAMI REDDY ">Dharmavaram:KETHIREDDY VENKATA RAMI REDDY</option>
+                                                                <option value="
+                                                                               Mopuragundu Thippeswamy">Madakasira:Mopuragundu Thippeswamy</option>
+                                                                <option value=" "></option>
+                                                                <option value=" P.V Siddha Reddy ">Kadiri: Siddha Reddy</option>
+                                                                <option value="DUDDUKUNTA SREEDHAR REDDY ">puttaparthi:DUDDUKUNTA SREEDHAR REDDY</option>
+                                                                <option value="Y SAIPRASAD REDDY ">Adoni:Y SAIPRASAD REDDY</option>
+                                                                <option value=" K.Chenna Kesava Reddy">yemmiganur:K.Chenna Kesava Reddy</option>
+                                                                <option value="BALA NAGI REDDY ">MANTRALAYAM:BALA NAGI REDDY</option>
+                                                                <option value="Sudhakar Babu ">kodumur:Sudhakar Babu</option>
+                                                                <option value="Silpa Ravichandra Reddy  ">nandyal:Silpa Ravichandra Reddy </option>
+                                                               
+
+						</optgroup>
+			
+				    </select>
+					
+					
+					
+					
+					<!--end of col-->
+					<div class="col-auto">
+						<button class="btn btn-sm btn-success" id="submit"  type="button">Search</button>						
+					</div>
+					<!--end of col-->
+				</div>
+			</form>
+		</div>
+		<!--end of col-->
+	</div>
+  </div>
+  <div class="container">
+	<div class="gallery">
+	  <img id="image" width="1200" height="800"> </img>
+	</div>
+	<div>
+		<table border=1>
+			<p><span id="wikiText"> </span></p>
+			
+		</table>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="{{url_for('js_static', filename='search.js')}}"></script>
+	</div>
+	<div class="gallery">
+	  <img id="senti_image" width="1600" height="1200"> </img>
+	</div>
+		
+  </div>
+  
+  <section id="maincontent">
+    <div class="container">
+      
+      <div class="row">
+        <div class="span12">
+          
+          <!-- end tagline -->
+        </div>
+      </div>
+      
+    </div>
+  </section>
+  <!-- Footer
+ ================================================== -->
+  <footer class="footer">
+    
+    <div class="verybottom">
+      <div class="container">
+        <div class="row">
+          <div class="span6">
+            <p>
+              &copy; Political Sentiment Analysis - All right reserved
+            </p>
+          </div>
+          <div class="span6">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript Library Files -->
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/jquery.easing.js"></script>
+  <script src="static/js/google-code-prettify/prettify.js"></script>
+  <script src="static/js/modernizr.js"></script>
+  <script src="static/js/bootstrap.js"></script>
+  <script src="static/js/jquery.elastislide.js"></script>
+  <script src="static/js/sequence/sequence.jquery-min.js"></script>
+  <script src="static/js/sequence/setting.js"></script>
+  <script src="static/js/jquery.prettyPhoto.js"></script>
+  <script src="static/js/application.js"></script>
+  <script src="static/js/jquery.flexslider.js"></script>
+  <script src="static/js/hover/jquery-hover-effect.js"></script>
+  <script src="static/js/hover/setting.js"></script>
+
+  <!-- Template Custom JavaScript File -->
+  <script src="static/js/custom.js"></script>
+  <script src="static/js/search.js"></script>
+  
+
+</body>
+</html>

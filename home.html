@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Political Sentiment Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <!-- styles -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,400,600,700" rel="stylesheet">
+  <link href="static/css/bootstrap.css" rel="stylesheet">
+  <link href="static/css/bootstrap-responsive.css" rel="stylesheet">
+  <link href="static/css/docs.css" rel="stylesheet">
+  <link href="static/css/prettyPhoto.css" rel="stylesheet">
+  <link href="static/js/google-code-prettify/prettify.css" rel="stylesheet">
+  <link href="static/css/flexslider.css" rel="stylesheet">
+  <link href="static/css/sequence.css" rel="stylesheet">
+  <link href="static/css/style.css" rel="stylesheet">
+  <link href="static/color/default.css" rel="stylesheet">
+
+  <!-- fav and touch icons -->
+  <link rel="shortcut icon" href="static/ico/favicon.ico">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/ico/apple-touch-icon-144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/ico/apple-touch-icon-114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/ico/apple-touch-icon-72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="static/ico/apple-touch-icon-57-precomposed.png">
+
+  <!-- =======================================================
+    Theme Name: Serenity
+    Theme URL: https://bootstrapmade.com/serenity-bootstrap-corporate-template/
+    Author: BootstrapMade.com
+    Author URL: https://bootstrapmade.com
+  ======================================================= -->
+</head>
+
+<body>
+  <header>
+    <!-- Navbar
+    ================================================== -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <!-- logo -->
+          <a class="brand logo" href="index.html">Political Sentiment Analysis</a>
+          <!-- end logo -->
+          <!-- top menu -->
+          <div class="navigation">
+            <nav>
+              <ul class="nav topnav">
+                <li class="dropdown active">
+                  <a href="{{url_for('index')}}">Home</a>
+                </li>
+                <li class="dropdown">
+                  <a href="{{url_for('search')}}">Search</a>
+                </li>
+				
+              </ul>
+            </nav>
+          </div>
+          <!-- end menu -->
+        </div>
+      </div>
+    </div>
+  </header>
+  <section id="intro">
+    <div class="jumbotron masthead">
+      <div class="container">
+        <!-- slider navigation -->
+        <div class="sequence-nav">
+          <div class="prev">
+            <span></span>
+          </div>
+          <div class="next">
+            <span></span>
+          </div>
+        </div>
+        <!-- end slider navigation -->
+        <div class="row">
+          <div class="span12">
+            <div id="slider_holder">
+              <div id="sequence">
+                <ul>
+                  <!-- Layer 1 -->
+                  <li>
+                    <div class="info animate-in">
+                      <h2>Extract Tweets</h2>
+                      <br>
+                      
+                      <p>
+                        The Twitter API will extract the related tweets as per the user interest.
+                      </p>
+                      </div>
+                    <img class="slider_img animate-in" src="static/img/slides/sequence/img-1.png" alt="">
+                  </li>
+                  <!-- Layer 2 -->
+                  <li>
+                    <div class="info">
+                      <h2>Preprocess Tweets</h2>
+                      <br>
+                      <p>
+                      The extracted tweets are cleaned in order to get a cleaned dataset.The regional language tweets will be semantically translated to english.
+                   </p>
+                      </div>
+                    <img class="slider_img" src="static/img/slides/sequence/img-2.png" alt="">
+                  </li>
+                  <!-- Layer 3 -->
+                  <li>
+                    <div class="info">
+                      <h2>Analyze Tweets</h2>
+                      <br>
+                      <p>
+                        Sentiment analysis is applied on the dataset to get the sentiment.
+                    </p>
+                     </div>
+                    <img class="slider_img" src="static/img/slides/sequence/img-3.png" alt="">
+                  </li>
+				  <!-- Layer 4 -->
+				  <li>
+                    <div class="info">
+                      <h2>Visualize Sentiment</h2>
+                      <br>
+                      <p>
+                   The final analysis is represented in the form of polls.
+                      </p>
+                    </div>
+                    <img class="slider_img" src="static/img/slides/sequence/img-3.png" alt="">
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!-- Sequence Slider::END-->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Footer
+ ================================================== -->
+  <footer class="footer">
+    
+    <div class="verybottom">
+      <div class="container">
+        <div class="row">
+          <div class="span6">
+            <p>
+              &copy; Political Sentiment Analysis - All right reserved
+            </p>
+          </div>
+          <div class="span6">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript Library Files -->
+  <script src="static/js/jquery.min.js"></script>
+  <script src="static/js/jquery.easing.js"></script>
+  <script src="static/js/google-code-prettify/prettify.js"></script>
+  <script src="static/js/modernizr.js"></script>
+  <script src="static/js/bootstrap.js"></script>
+  <script src="static/js/jquery.elastislide.js"></script>
+  <script src="static/js/sequence/sequence.jquery-min.js"></script>
+  <script src="static/js/sequence/setting.js"></script>
+  <script src="static/js/jquery.prettyPhoto.js"></script>
+  <script src="static/js/application.js"></script>
+  <script src="static/js/jquery.flexslider.js"></script>
+  <script src="static/js/hover/jquery-hover-effect.js"></script>
+  <script src="static/js/hover/setting.js"></script>
+
+  <!-- Template Custom JavaScript File -->
+  <script src="static/js/custom.js"></script>
+
+</body>
+</html>
